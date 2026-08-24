@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { Database } from '../types';
+import { seriesLabel, posterLabel } from '../utils/labels';
 
 interface TopicPickerProps {
   database: Database;
@@ -42,8 +43,8 @@ export const TopicPicker: React.FC<TopicPickerProps> = ({
         const value = seriesId === 'all' ? `${p.series_id}::${p.id}` : p.id;
         const label =
           seriesId === 'all'
-            ? `${p.series_name} · ${p.title}`
-            : `${p.plate_number} ${p.title}`;
+            ? `${seriesLabel({ name: p.series_name, english_name: p.series_english_name })} · ${posterLabel(p)}`
+            : `${p.plate_number} ${posterLabel(p)}`;
         return (
           <option key={`${p.series_id}-${p.id}`} value={value}>
             {label}
@@ -72,10 +73,10 @@ export const TopicPicker: React.FC<TopicPickerProps> = ({
             onChange={(e) => handleSeriesChange(e.target.value)}
             className="w-full min-w-0 bg-cream-100 border border-ink/20 px-2 py-1.5 text-xs font-mono text-ink font-medium focus:outline-none focus:border-ink"
           >
-            <option value="all">All topics</option>
+            <option value="all">All topics (every series)</option>
             {database.series.map((s) => (
               <option key={s.id} value={s.id}>
-                {s.name}
+                {seriesLabel(s)}
               </option>
             ))}
           </select>
@@ -92,7 +93,7 @@ export const TopicPicker: React.FC<TopicPickerProps> = ({
                 : 'bg-cream-100 text-ink border-ink/20 hover:border-ink/50'
             }`}
           >
-            All topics
+            All topics (every series)
           </button>
           {database.series.map((s) => {
             const active = seriesId === s.id;
@@ -109,7 +110,7 @@ export const TopicPicker: React.FC<TopicPickerProps> = ({
                 style={{ borderLeftColor: s.color }}
                 title={s.description}
               >
-                {s.name}
+                {seriesLabel(s)}
               </button>
             );
           })}

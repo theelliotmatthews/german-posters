@@ -3,6 +3,7 @@ import { Image as ImageIcon, BookOpen, ExternalLink, X, ZoomIn, Layers, Volume2 
 import { Database, Poster, Card } from '../types';
 import { speakGerman } from '../utils/sound';
 import { PictogramIcon } from './PictogramIcon';
+import { seriesLabel, posterLabel } from '../utils/labels';
 
 interface PosterGalleryProps {
   database: Database;
@@ -60,7 +61,7 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
             <option value="all">All Series ({database.stats.total_posters} Posters)</option>
             {database.series.map((s) => (
               <option key={s.id} value={s.id}>
-                {s.name} ({s.level})
+                {seriesLabel(s)} ({s.level})
               </option>
             ))}
           </select>
@@ -81,7 +82,7 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
               <div className="relative aspect-4/5 bg-cream-200 overflow-hidden border-b border-ink/20">
                 <img
                   src={imgSrc}
-                  alt={poster.title}
+                  alt={posterLabel(poster)}
                   loading="lazy"
                   onError={(e) => {
                     // Fallback to fal url if local image load fails
@@ -104,10 +105,12 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
               {/* Caption */}
               <div className="p-3 space-y-1">
                 <span className="text-[10px] font-mono text-ink/50 uppercase block truncate">
-                  {poster.series_name}
+                  {poster.series_english_name
+                    ? `${poster.series_name} (${poster.series_english_name})`
+                    : poster.series_name}
                 </span>
                 <h4 className="font-bold text-xs sm:text-sm text-ink line-clamp-1 font-display">
-                  {poster.title}
+                  {posterLabel(poster)}
                 </h4>
                 <div className="flex items-center justify-between text-[10px] font-mono text-ink/70 pt-1">
                   <span>{poster.card_count} cards</span>
@@ -133,7 +136,7 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
             <div className="md:w-1/2 bg-cream-200 p-4 flex items-center justify-center border-b md:border-b-0 md:border-r border-ink/20 overflow-auto">
               <img
                 src={getPosterImageUrl(activePoster)}
-                alt={activePoster.title}
+                alt={posterLabel(activePoster)}
                 onError={(e) => {
                   if (activePoster.image_url) {
                     (e.target as HTMLImageElement).src = activePoster.image_url;
@@ -150,10 +153,14 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
                 <div className="flex items-start justify-between gap-2 border-b border-ink/10 pb-3">
                   <div>
                     <span className="text-xs font-mono font-bold tracking-wider text-german-amber uppercase">
-                      {activePoster.series_badge} · PLATE {activePoster.plate_number}
+                      {seriesLabel({
+                        name: activePoster.series_name,
+                        english_name: activePoster.series_english_name,
+                      })}{' '}
+                      · {activePoster.series_badge} · PLATE {activePoster.plate_number}
                     </span>
                     <h3 className="text-2xl font-black font-display text-ink tracking-tight">
-                      {activePoster.title}
+                      {posterLabel(activePoster)}
                     </h3>
                     {activePoster.subtitle && (
                       <p className="text-xs font-mono text-ink/60">{activePoster.subtitle}</p>

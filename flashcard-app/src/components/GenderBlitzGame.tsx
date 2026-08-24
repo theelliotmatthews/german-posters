@@ -6,6 +6,7 @@ import { sound, speakGerman } from '../utils/sound';
 import { updateHighScore } from '../utils/storage';
 import { PictogramIcon } from './PictogramIcon';
 import { filterCardsByTopic } from '../utils/topic';
+import { cardTopicLabel } from '../utils/labels';
 
 interface GenderBlitzGameProps {
   database: Database;
@@ -246,7 +247,7 @@ export const GenderBlitzGame: React.FC<GenderBlitzGameProps> = ({
           <div className="bg-cream-50 border-2 border-ink rounded-2xl p-8 sm:p-12 text-center relative shadow-poster space-y-4 min-h-[220px] flex flex-col justify-center corner-registration">
             {/* Pronunciation & hint */}
             <div className="flex items-center justify-between text-xs font-mono text-ink/60">
-              <span className="truncate">{currentNoun.poster_title}</span>
+              <span className="truncate">{cardTopicLabel(currentNoun)}</span>
               <button
                 onClick={() => speakGerman(currentNoun.german)}
                 className="p-1 rounded hover:bg-cream-200 text-ink/80 transition-colors flex items-center gap-1"

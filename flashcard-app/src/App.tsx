@@ -7,10 +7,12 @@ import { SpeedQuizGame } from './components/SpeedQuizGame';
 import { WordScrambleGame } from './components/WordScrambleGame';
 import { MatchGridGame } from './components/MatchGridGame';
 import { PosterGallery } from './components/PosterGallery';
+import { CurriculumMap } from './components/CurriculumMap';
 import { CardSearchModal } from './components/CardSearchModal';
 import { Database, UserProgress, Card } from './types';
 import { sound } from './utils/sound';
 import { loadProgress, saveProgress } from './utils/storage';
+import { seriesLabel } from './utils/labels';
 import databaseData from './data/flashcards.json';
 
 export const App: React.FC = () => {
@@ -53,7 +55,7 @@ export const App: React.FC = () => {
   ).length;
 
   const topicKey = `${topicSeriesId}::${topicPosterId}`;
-  const seriesNames = database.series.map((s) => s.name).join(', ');
+  const seriesNames = database.series.map((s) => seriesLabel(s)).join(', ');
 
   return (
     <div className="min-h-screen bg-cream-100 text-ink flex flex-col font-sans">
@@ -68,7 +70,7 @@ export const App: React.FC = () => {
           masteredCount={masteredCount}
           posterCount={database.stats.total_posters}
         />
-        {activeTab !== 'posters' && (
+        {activeTab !== 'posters' && activeTab !== 'map' && (
           <TopicPicker
             database={database}
             seriesId={topicSeriesId}
@@ -145,6 +147,17 @@ export const App: React.FC = () => {
             onStudyPosterDeck={handleStudyPosterDeck}
             selectedPosterId={topicPosterId !== 'all' ? topicPosterId : null}
             selectedSeriesId={topicSeriesId !== 'all' ? topicSeriesId : null}
+          />
+        )}
+
+        {activeTab === 'map' && (
+          <CurriculumMap
+            database={database}
+            onOpenTopic={(seriesId, posterId) => {
+              setTopicSeriesId(seriesId);
+              setTopicPosterId(posterId === 'all' ? 'all' : posterId);
+              setActiveTab('study');
+            }}
           />
         )}
       </main>

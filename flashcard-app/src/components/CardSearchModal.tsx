@@ -3,6 +3,7 @@ import { Search, X, Volume2, Star, BookOpen } from 'lucide-react';
 import { Database, Card } from '../types';
 import { speakGerman } from '../utils/sound';
 import { PictogramIcon } from './PictogramIcon';
+import { cardTopicLabel } from '../utils/labels';
 
 interface CardSearchModalProps {
   isOpen: boolean;
@@ -50,6 +51,7 @@ export const CardSearchModal: React.FC<CardSearchModalProps> = ({
           c.german.toLowerCase().includes(q) ||
           c.english.toLowerCase().includes(q) ||
           c.poster_title.toLowerCase().includes(q) ||
+          (c.poster_title_en || '').toLowerCase().includes(q) ||
           c.section.toLowerCase().includes(q)
       )
       .slice(0, 50);
@@ -144,7 +146,7 @@ export const CardSearchModal: React.FC<CardSearchModalProps> = ({
 
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="text-[10px] font-mono text-ink/40 hidden sm:inline">
-                    {card.poster_title}
+                    {cardTopicLabel(card)}
                   </span>
                   <button
                     onClick={(e) => {

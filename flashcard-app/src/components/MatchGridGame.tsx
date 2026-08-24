@@ -4,6 +4,7 @@ import { Grid, RotateCcw, Volume2, Check } from 'lucide-react';
 import { Database, UserProgress, Card } from '../types';
 import { sound, speakGerman } from '../utils/sound';
 import { filterCardsByTopic } from '../utils/topic';
+import { cardTopicLabel } from '../utils/labels';
 
 interface MatchGridGameProps {
   database: Database;
@@ -201,7 +202,7 @@ export const MatchGridGame: React.FC<MatchGridGameProps> = ({
               </div>
 
               <div className="text-[9px] font-mono opacity-30 truncate w-full">
-                {tile.isFlipped || tile.isMatched ? tile.card.poster_title : '• • •'}
+                {tile.isFlipped || tile.isMatched ? cardTopicLabel(tile.card) : '• • •'}
               </div>
             </button>
           );

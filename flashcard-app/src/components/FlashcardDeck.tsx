@@ -17,6 +17,7 @@ import { sound, speakGerman } from '../utils/sound';
 import { updateCardMastery, toggleStarCard } from '../utils/storage';
 import { PictogramIcon } from './PictogramIcon';
 import { filterCardsByTopic } from '../utils/topic';
+import { cardTopicLabel } from '../utils/labels';
 
 interface FlashcardDeckProps {
   database: Database;
@@ -291,7 +292,7 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({
                 CARD {currentIndex + 1} OF {deck.length}
               </span>
               <span className="text-ink/30">|</span>
-              <span className="truncate max-w-[200px] sm:max-w-xs">{currentCard?.poster_title}</span>
+              <span className="truncate max-w-[200px] sm:max-w-xs">{currentCard ? cardTopicLabel(currentCard) : ''}</span>
             </div>
 
             <div className="flex items-center gap-2">
@@ -415,7 +416,7 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({
                       Click card or press <kbd className="bg-cream-200 px-1 rounded border border-ink/20">Space</kbd> to reveal
                     </span>
                   </span>
-                  <span className="font-semibold truncate max-w-[45%] text-right">{currentCard?.poster_title}</span>
+                  <span className="font-semibold truncate max-w-[45%] text-right">{currentCard ? cardTopicLabel(currentCard) : ''}</span>
                 </div>
               </div>
 
@@ -493,7 +494,7 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({
                 {/* Back Footer */}
                 <div className="flex items-center justify-between pt-4 border-t border-ink/10 text-xs font-mono text-ink/50">
                   <span>Rate your recall below</span>
-                  <span>{currentCard?.poster_id} · {currentCard?.poster_title}</span>
+                  <span>{currentCard?.poster_id} · {currentCard ? cardTopicLabel(currentCard) : ''}</span>
                 </div>
               </div>
             </div>

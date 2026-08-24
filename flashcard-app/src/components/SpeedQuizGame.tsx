@@ -6,6 +6,7 @@ import { sound, speakGerman } from '../utils/sound';
 import { updateHighScore } from '../utils/storage';
 import { PictogramIcon } from './PictogramIcon';
 import { filterCardsByTopic } from '../utils/topic';
+import { cardTopicLabel } from '../utils/labels';
 
 interface SpeedQuizGameProps {
   database: Database;
@@ -218,7 +219,7 @@ export const SpeedQuizGame: React.FC<SpeedQuizGameProps> = ({
           <div className="bg-cream-50 border-2 border-ink rounded-2xl p-8 text-center space-y-4 shadow-poster corner-registration">
             <div className="flex items-center justify-between text-xs font-mono text-ink/50">
               <span>{currentQ.mode === 'de_to_en' ? 'TRANSLATE TO ENGLISH' : 'TRANSLATE TO GERMAN'}</span>
-              <span className="truncate">{currentQ.card.poster_title}</span>
+              <span className="truncate">{cardTopicLabel(currentQ.card)}</span>
             </div>
 
             <div className="flex justify-center -mb-1">

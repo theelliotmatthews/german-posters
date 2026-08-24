@@ -129,7 +129,7 @@ export const WordScrambleGame: React.FC<WordScrambleGameProps> = ({
 
       {sentenceCards.length === 0 ? (
         <div className="bg-cream-50 border-2 border-ink rounded-2xl p-8 text-center text-sm text-ink/70 font-mono">
-          No sentences in this topic to scramble. Try Grundlagen or All topics.
+          No sentences in this topic to scramble. Try Grundlagen I (Foundations I) or All topics (every series).
         </div>
       ) : currentCard && (
         <div className="space-y-6">

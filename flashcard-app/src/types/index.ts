@@ -14,6 +14,7 @@ export interface Card {
   rule: string;
   poster_id: string;
   poster_title: string;
+  poster_title_en?: string;
   series_id: string;
 }
 
@@ -21,12 +22,14 @@ export interface Poster {
   id: string;
   plate_number: string;
   title: string;
+  english_title?: string;
   subtitle: string;
   how_it_works: string;
   image_file: string;
   image_url?: string;
   series_id: string;
   series_name: string;
+  series_english_name?: string;
   series_level: string;
   series_badge: string;
   series_color: string;
@@ -37,6 +40,7 @@ export interface Poster {
 export interface Series {
   id: string;
   name: string;
+  english_name?: string;
   level: string;
   badge: string;
   concepts_file: string;
@@ -75,5 +79,3 @@ export interface UserProgress {
   lastActiveDate: string;
   soundEnabled: boolean;
 }
-
-export type UserProgress = UserProgress;
