@@ -1,8 +1,8 @@
 import React from 'react';
-import { Volume2, VolumeX, Sparkles, BookOpen, Zap, HelpCircle, Layers, Grid, Search, Image as ImageIcon, Map } from 'lucide-react';
+import { Volume2, VolumeX, Sparkles, BookOpen, Zap, HelpCircle, Layers, Grid, Search, Image as ImageIcon, Map, Headphones } from 'lucide-react';
 import { UserProgress } from '../types';
 
-export type ActiveTab = 'study' | 'blitz' | 'quiz' | 'scramble' | 'match' | 'posters' | 'map';
+export type ActiveTab = 'study' | 'blitz' | 'quiz' | 'scramble' | 'match' | 'listen' | 'posters' | 'map';
 
 interface HeaderProps {
   activeTab: ActiveTab;
@@ -33,6 +33,7 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'quiz', label: 'Speed Quiz', icon: <HelpCircle className="w-4 h-4" /> },
     { id: 'scramble', label: 'Word Order', icon: <Layers className="w-4 h-4" /> },
     { id: 'match', label: 'Pair Match', icon: <Grid className="w-4 h-4" /> },
+    { id: 'listen', label: 'Listen & Speak', icon: <Headphones className="w-4 h-4" /> },
     { id: 'posters', label: 'Poster Wall', icon: <ImageIcon className="w-4 h-4" />, badge: String(posterCount) },
     { id: 'map', label: 'Curriculum', icon: <Map className="w-4 h-4" /> },
   ];

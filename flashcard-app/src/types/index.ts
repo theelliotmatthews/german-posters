@@ -74,6 +74,7 @@ export interface UserProgress {
     speedQuiz: number;
     wordScramble: number;
     matchGrid: number;
+    listenSpeak: number;
   };
   streak: number;
   lastActiveDate: string;

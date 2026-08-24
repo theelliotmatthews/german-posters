@@ -56,14 +56,12 @@ const CHECKLIST: ChecklistItem[] = [
   { id: 'ord', cefr: 'A2', german: 'ORDINALZAHLEN', english: 'Ordinal numbers', seriesId: 'alltag-plus', posterId: '12' },
   { id: 'work', cefr: 'A2', german: 'BERUF + ARBEIT', english: 'Jobs and work', seriesId: 'wortschatz-2', posterId: '03' },
   { id: 'doctor', cefr: 'A2', german: 'BEIM ARZT', english: 'At the doctor', seriesId: 'wortschatz-2', posterId: '05' },
-];
-
-const STILL_OPEN: { german: string; english: string; cefr: string }[] = [
-  { german: 'DAS FUTUR (werden)', english: 'Future with werden', cefr: 'A2' },
-  { german: 'RELATIVSÄTZE', english: 'Relative clauses', cefr: 'A2' },
-  { german: 'DAS PASSIV', english: 'Passive voice', cefr: 'A2+' },
-  { german: 'ZU + INFINITIV', english: 'Infinitive with zu', cefr: 'A2' },
-  { german: 'HÖREN / SPRECHEN', english: 'Listening and speaking drills', cefr: 'A1–A2' },
+  { id: 'futur', cefr: 'A2', german: 'FUTUR', english: 'Future with werden', seriesId: 'kurs-plus', posterId: '01' },
+  { id: 'rel', cefr: 'A2', german: 'RELATIVSÄTZE', english: 'Relative clauses', seriesId: 'kurs-plus', posterId: '02' },
+  { id: 'zuinf', cefr: 'A2', german: 'ZU + INFINITIV', english: 'Infinitive with zu', seriesId: 'kurs-plus', posterId: '03' },
+  { id: 'passiv', cefr: 'A2', german: 'PASSIV', english: 'Passive voice', seriesId: 'kurs-plus', posterId: '04' },
+  { id: 'hoeren', cefr: 'A2', german: 'HÖREN', english: 'Listening drills', seriesId: 'kurs-plus', posterId: '05' },
+  { id: 'sprechen', cefr: 'A2', german: 'SPRECHEN', english: 'Speaking drills', seriesId: 'kurs-plus', posterId: '06' },
 ];
 
 export const CurriculumMap: React.FC<CurriculumMapProps> = ({ database, onOpenTopic }) => {
@@ -146,18 +144,16 @@ export const CurriculumMap: React.FC<CurriculumMapProps> = ({ database, onOpenTo
       </section>
 
       <section>
-        <h3 className="font-display text-xl font-bold text-ink mb-3">Still open</h3>
+        <h3 className="font-display text-xl font-bold text-ink mb-3">A1–A2 course</h3>
         <p className="text-sm text-ink/70 mb-3">
-          Not in the card deck yet. Next sheets if we keep going.
+          Goethe-style A1 and A2 core is now in the deck: grammar, vocabulary, future,
+          relative clauses, infinitive with zu, passive, plus listen and speak drills.
+          Beyond this band sits B1 (full simple past, subjunctive, longer texts).
         </p>
-        <div className="grid sm:grid-cols-2 gap-2">
-          {STILL_OPEN.map((row) => (
-            <div key={row.german} className="border border-dashed border-ink/30 px-3 py-2">
-              <div className="font-mono text-[10px] uppercase tracking-wider text-ink/50">{row.cefr}</div>
-              <div className="font-bold text-ink text-sm">{row.german}</div>
-              <div className="text-xs text-ink/70">{row.english}</div>
-            </div>
-          ))}
+        <div className="border-2 border-ink bg-cream-50 px-4 py-3 text-sm">
+          <div className="font-mono text-[10px] uppercase tracking-wider text-ink/50">Status</div>
+          <div className="font-bold text-ink">Complete for A1–A2</div>
+          <div className="text-ink/70">Open Listen & Speak for Hören (listening) and Sprechen (speaking).</div>
         </div>
       </section>
 

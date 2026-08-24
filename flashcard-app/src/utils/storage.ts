@@ -10,6 +10,7 @@ const defaultProgress: UserProgress = {
     speedQuiz: 0,
     wordScramble: 0,
     matchGrid: 0,
+    listenSpeak: 0,
   },
   streak: 1,
   lastActiveDate: new Date().toISOString().split('T')[0],

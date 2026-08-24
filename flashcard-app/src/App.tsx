@@ -6,6 +6,7 @@ import { GenderBlitzGame } from './components/GenderBlitzGame';
 import { SpeedQuizGame } from './components/SpeedQuizGame';
 import { WordScrambleGame } from './components/WordScrambleGame';
 import { MatchGridGame } from './components/MatchGridGame';
+import { ListenSpeakGame } from './components/ListenSpeakGame';
 import { PosterGallery } from './components/PosterGallery';
 import { CurriculumMap } from './components/CurriculumMap';
 import { CardSearchModal } from './components/CardSearchModal';
@@ -132,6 +133,17 @@ export const App: React.FC = () => {
 
         {activeTab === 'match' && (
           <MatchGridGame
+            key={topicKey}
+            database={database}
+            progress={progress}
+            setProgress={setProgress}
+            seriesId={topicSeriesId}
+            posterId={topicPosterId}
+          />
+        )}
+
+        {activeTab === 'listen' && (
+          <ListenSpeakGame
             key={topicKey}
             database={database}
             progress={progress}
