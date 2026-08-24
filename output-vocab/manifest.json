@@ -1,0 +1,92 @@
+[
+  {
+    "id": "01",
+    "title": "ESSEN",
+    "file": "output-vocab/01-food-essen.png",
+    "request_id": "01a00985-88e6-7eb3-bd46-ad2790f022fe",
+    "url": "https://v3b.fal.media/files/b/0aa68a96/ZlsUA3Ch04H3NgBFkT21w_kcWcxWc5.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "02",
+    "title": "IM RESTAURANT",
+    "file": "output-vocab/02-eating-out-im-restaurant.png",
+    "request_id": "01a00985-8e5a-7060-b443-da45e84faa90",
+    "url": "https://v3b.fal.media/files/b/0aa68aa9/k1OUulT8lNl9hp3_6mE9S_p8U54PzT.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "03",
+    "title": "FARBEN",
+    "file": "output-vocab/03-colours-farben.png",
+    "request_id": "01a00985-9511-7543-89d4-4ce7b6175429",
+    "url": "https://v3b.fal.media/files/b/0aa68aa9/X_Su8NFTCcvO-WQGWFP2Y_pDF6iHeB.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "04",
+    "title": "DER KÖRPER",
+    "file": "output-vocab/04-body-parts-koerper.png",
+    "request_id": "01a00985-9a7f-7592-91d9-c89826bfe4ed",
+    "url": "https://v3b.fal.media/files/b/0aa68a96/DTP0GQ0FablNaz2hYQepx_5iBgk2kS.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "05",
+    "title": "ZU HAUSE",
+    "file": "output-vocab/05-at-home-zu-hause.png",
+    "request_id": "01a00985-a082-71b2-9aa0-b2c5da37fb35",
+    "url": "https://v3b.fal.media/files/b/0aa68aa9/Poomv8KxMu_3OsIp7CWzY_OHxR7RVa.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "06",
+    "title": "DATUM + UHRZEIT",
+    "file": "output-vocab/06-dates-times-datum-uhrzeit.png",
+    "request_id": "01a00985-a663-7de1-8ea3-538139cb912e",
+    "url": "https://v3b.fal.media/files/b/0aa68aa9/Jj3UzqGcgJXDumYICuz3N_y8hijF6s.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "07",
+    "title": "ZAHLEN",
+    "file": "output-vocab/07-numbers-zahlen.png",
+    "request_id": "01a00985-ac02-7092-80b0-ef883e86fd26",
+    "url": "https://v3b.fal.media/files/b/0aa68a97/Mredpbf7Dnh7vtZiQh-9I_0MoLoGAW.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "08",
+    "title": "JAHRESZEITEN",
+    "file": "output-vocab/08-seasons-jahreszeiten.png",
+    "request_id": "01a00985-b1a8-7631-9f0c-d9212321be75",
+    "url": "https://v3b.fal.media/files/b/0aa68a97/7XtI_rZtch6H0s4IIO3EK_GEjXr10z.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "09",
+    "title": "KLEIDUNG",
+    "file": "output-vocab/09-clothing-kleidung.png",
+    "request_id": "01a00985-b719-7ca0-bd8d-47cb67bcba2f",
+    "url": "https://v3b.fal.media/files/b/0aa68a97/eASCJA6hcsb1nN3B23wTi_HcSqD9tf.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "10",
+    "title": "REISEN",
+    "file": "output-vocab/10-travel-reisen.png",
+    "request_id": "01a00985-be5b-7642-91f4-cc89ee38aca2",
+    "url": "https://v3b.fal.media/files/b/0aa68aaa/weW_G7S-l39Xu4BpedktG_8d8YxAhG.png",
+    "width": null,
+    "height": null
+  }
+]

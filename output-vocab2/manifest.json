@@ -1,0 +1,92 @@
+[
+  {
+    "id": "01",
+    "title": "DIE FAMILIE",
+    "file": "output-vocab2/01-family-familie.png",
+    "request_id": "01a009d5-ed28-7481-84ff-dd50fbe6217c",
+    "url": "https://v3b.fal.media/files/b/0aa68ca5/7AVLj1n80TVobjNde_k7u_LRjDuNDD.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "02",
+    "title": "EINKAUFEN",
+    "file": "output-vocab2/02-shopping-einkaufen.png",
+    "request_id": "01a009d5-f2af-7cf0-bb13-9f7819b0e54a",
+    "url": "https://v3b.fal.media/files/b/0aa68cb8/igQ-3wirKgNBF8w-FeWhO_QbsON0Kw.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "03",
+    "title": "BERUF + ARBEIT",
+    "file": "output-vocab2/03-jobs-work-beruf-arbeit.png",
+    "request_id": "01a009d5-f853-70d1-9219-4d81ad885876",
+    "url": "https://v3b.fal.media/files/b/0aa68ca5/BK-DgTzOxKqU_yTlbRSef_SI9iRhXM.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "04",
+    "title": "DER WEG",
+    "file": "output-vocab2/04-directions-der-weg.png",
+    "request_id": "01a009d5-fdc3-71f0-b8be-11e0804935a2",
+    "url": "https://v3b.fal.media/files/b/0aa68ca5/DBos9abTOtwXzHoxYR11B_ionFWZC3.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "05",
+    "title": "BEIM ARZT",
+    "file": "output-vocab2/05-at-the-doctor-beim-arzt.png",
+    "request_id": "01a009d6-0388-7da2-9b2c-5d899d573a74",
+    "url": "https://v3b.fal.media/files/b/0aa68ca5/lryKuyrldU4l8KXQBmetU_jbdlPlEb.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "06",
+    "title": "HOBBYS",
+    "file": "output-vocab2/06-hobbies-hobbys.png",
+    "request_id": "01a009d6-0998-7d51-b7c9-5a10e8eb6937",
+    "url": "https://v3b.fal.media/files/b/0aa68ca5/vKfnoALPw6rC6aNa7YwPj_1nWb0JBc.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "07",
+    "title": "HANDY + INTERNET",
+    "file": "output-vocab2/07-phone-internet-handy-internet.png",
+    "request_id": "01a009d6-0f0a-77b3-9d8e-a1b0e32ecc82",
+    "url": "https://v3b.fal.media/files/b/0aa68ca5/-7D_MsUsYtfDFIn_bWbho_WFXYNpe8.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "08",
+    "title": "GELD + AMT",
+    "file": "output-vocab2/08-money-bureaucracy-geld-amt.png",
+    "request_id": "01a009d6-1482-7681-bbce-cd761f9e08d5",
+    "url": "https://v3b.fal.media/files/b/0aa68ca6/SM7QX5bdQg2sQ1Wr_nSSx_W5fkAYRR.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "09",
+    "title": "TIERE + NATUR",
+    "file": "output-vocab2/09-animals-nature-tiere-natur.png",
+    "request_id": "01a009d6-1a0f-7ff1-af91-e89d20cbdb3a",
+    "url": "https://v3b.fal.media/files/b/0aa68ca6/YV7HJWb6aCMj273lEEJ_d_geOJEmT3.png",
+    "width": null,
+    "height": null
+  },
+  {
+    "id": "10",
+    "title": "FESTE + WÜNSCHE",
+    "file": "output-vocab2/10-celebrations-feste-wuensche.png",
+    "request_id": "01a009d6-1fc9-7c00-bf8c-bcd204a1d56a",
+    "url": "https://v3b.fal.media/files/b/0aa68ca6/tLq4LnXrwdPTfbi9Ma0tZ_J8feXhy8.png",
+    "width": null,
+    "height": null
+  }
+]
