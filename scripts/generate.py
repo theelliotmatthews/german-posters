@@ -134,6 +134,11 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--concepts", default="poster-concepts.md")
     parser.add_argument("--outdir", default="output")
+    parser.add_argument(
+        "--no-sync",
+        action="store_true",
+        help="Skip auto-running extract_flashcards after generation (use for visual-only posters)",
+    )
     parser.add_argument("only", nargs="*", help="poster ids or slugs to generate")
     args = parser.parse_args()
 
@@ -192,12 +197,15 @@ def main() -> int:
         meta_path.write_text(json.dumps(sorted(manifest, key=lambda m: m["id"]), indent=2))
         print(f"  saved {dest}", flush=True)
 
-    try:
-        from extract_flashcards import main as sync_flashcards
-        print("\nUpdating flashcard web app database with new poster data…")
-        sync_flashcards()
-    except Exception as e:
-        print(f"Note: could not auto-sync flashcard app: {e}", file=sys.stderr)
+    if not args.no_sync:
+        try:
+            from extract_flashcards import main as sync_flashcards
+            print("\nUpdating flashcard web app database with new poster data…")
+            sync_flashcards()
+        except Exception as e:
+            print(f"Note: could not auto-sync flashcard app: {e}", file=sys.stderr)
+    else:
+        print("\nSkipping flashcard sync (--no-sync).")
 
     print("Done.")
     return 0

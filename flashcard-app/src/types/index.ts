@@ -35,6 +35,8 @@ export interface Poster {
   series_color: string;
   card_count: number;
   cards: Card[];
+  paired_series_id?: string;
+  paired_poster_id?: string;
 }
 
 export interface Series {

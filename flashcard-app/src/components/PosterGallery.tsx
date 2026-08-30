@@ -1,9 +1,16 @@
-import React, { useState, useMemo } from 'react';
-import { Image as ImageIcon, BookOpen, ExternalLink, X, ZoomIn, Layers, Volume2 } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Image as ImageIcon, BookOpen, X, ZoomIn, Volume2, Type, Palette } from 'lucide-react';
 import { Database, Poster, Card } from '../types';
 import { speakGerman } from '../utils/sound';
 import { PictogramIcon } from './PictogramIcon';
 import { seriesLabel, posterLabel } from '../utils/labels';
+import {
+  BAUSTEINE_VISUAL_SERIES,
+  findBausteinePosterInSeries,
+  isBausteineSeries,
+  resolveBausteineImagePoster,
+  switchBausteineSeries,
+} from '../utils/bausteineVisual';
 
 interface PosterGalleryProps {
   database: Database;
@@ -19,26 +26,67 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
   selectedSeriesId,
 }) => {
   const [selectedSeries, setSelectedSeries] = useState<string>(selectedSeriesId || 'all');
+  const [preferVisualChart, setPreferVisualChart] = useState<boolean>(
+    selectedSeriesId === BAUSTEINE_VISUAL_SERIES,
+  );
   const [activePoster, setActivePoster] = useState<Poster | null>(() => {
     if (selectedPosterId && selectedSeriesId) {
-      return database.posters.find((p) => p.id === selectedPosterId && p.series_id === selectedSeriesId) || null;
+      return (
+        database.posters.find((p) => p.id === selectedPosterId && p.series_id === selectedSeriesId) ||
+        null
+      );
     }
     return null;
   });
+
+  useEffect(() => {
+    if (selectedSeriesId) {
+      setSelectedSeries(selectedSeriesId);
+      setPreferVisualChart(selectedSeriesId === BAUSTEINE_VISUAL_SERIES);
+    }
+  }, [selectedSeriesId]);
+
+  useEffect(() => {
+    if (selectedPosterId && selectedSeriesId) {
+      const poster =
+        database.posters.find((p) => p.id === selectedPosterId && p.series_id === selectedSeriesId) ||
+        null;
+      setActivePoster(poster);
+    }
+  }, [selectedPosterId, selectedSeriesId, database.posters]);
 
   const filteredPosters = useMemo(() => {
     if (selectedSeries === 'all') return database.posters;
     return database.posters.filter((p) => p.series_id === selectedSeries);
   }, [database.posters, selectedSeries]);
 
-  const getPosterImageUrl = (poster: Poster) => {
-    // If local symlink exists under /posters/, use that, or fallback to remote fal.media url
-    return `/posters/${poster.image_file}`;
+  const showBausteineToggle = selectedSeries === 'all' ? false : isBausteineSeries(selectedSeries);
+
+  const getPosterImageUrl = (poster: Poster) => `/posters/${poster.image_file}`;
+
+  const getGridImagePoster = (poster: Poster) =>
+    isBausteineSeries(poster.series_id)
+      ? resolveBausteineImagePoster(database.posters, poster, preferVisualChart)
+      : poster;
+
+  const handleBausteineToggle = (visual: boolean) => {
+    setPreferVisualChart(visual);
+    const nextSeries = switchBausteineSeries(selectedSeries, visual);
+    if (isBausteineSeries(selectedSeries)) {
+      setSelectedSeries(nextSeries);
+    }
+    if (activePoster && isBausteineSeries(activePoster.series_id)) {
+      const mapped = findBausteinePosterInSeries(database.posters, activePoster, nextSeries);
+      if (mapped) setActivePoster(mapped);
+    }
   };
+
+  const lightboxImagePoster = activePoster
+    ? resolveBausteineImagePoster(database.posters, activePoster, preferVisualChart)
+    : null;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6">
-      {/* Top Header & Filter */}
       <div className="bg-cream-50 border-2 border-ink rounded-xl p-5 shadow-poster flex flex-wrap items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
@@ -52,10 +100,39 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
           </h2>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          {showBausteineToggle && (
+            <div className="flex border-2 border-ink/20 overflow-hidden">
+              <button
+                type="button"
+                onClick={() => handleBausteineToggle(false)}
+                className={`px-2.5 py-1.5 text-[11px] font-mono font-bold flex items-center gap-1 ${
+                  !preferVisualChart ? 'bg-ink text-cream-50' : 'bg-cream-100 text-ink/70'
+                }`}
+              >
+                <Type className="w-3.5 h-3.5" />
+                Text chart
+              </button>
+              <button
+                type="button"
+                onClick={() => handleBausteineToggle(true)}
+                className={`px-2.5 py-1.5 text-[11px] font-mono font-bold flex items-center gap-1 ${
+                  preferVisualChart ? 'bg-ink text-cream-50' : 'bg-cream-100 text-ink/70'
+                }`}
+              >
+                <Palette className="w-3.5 h-3.5" />
+                Visual chart
+              </button>
+            </div>
+          )}
+
           <select
             value={selectedSeries}
-            onChange={(e) => setSelectedSeries(e.target.value)}
+            onChange={(e) => {
+              const next = e.target.value;
+              setSelectedSeries(next);
+              setPreferVisualChart(next === BAUSTEINE_VISUAL_SERIES);
+            }}
             className="bg-cream-100 border border-ink/20 rounded px-3 py-1.5 text-xs font-mono text-ink font-medium focus:outline-none focus:border-ink"
           >
             <option value="all">All Series ({database.stats.total_posters} Posters)</option>
@@ -68,26 +145,24 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
         </div>
       </div>
 
-      {/* Grid of Posters */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {filteredPosters.map((poster) => {
-          const imgSrc = getPosterImageUrl(poster);
+          const imagePoster = getGridImagePoster(poster);
+          const imgSrc = getPosterImageUrl(imagePoster);
           return (
             <div
               key={`${poster.series_id}-${poster.id}`}
               onClick={() => setActivePoster(poster)}
               className="group cursor-pointer bg-cream-50 border-2 border-ink rounded-xl overflow-hidden shadow-poster hover:shadow-poster-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
             >
-              {/* Image Container with 4:5 Aspect Ratio */}
               <div className="relative aspect-4/5 bg-cream-200 overflow-hidden border-b border-ink/20">
                 <img
                   src={imgSrc}
                   alt={posterLabel(poster)}
                   loading="lazy"
                   onError={(e) => {
-                    // Fallback to fal url if local image load fails
-                    if (poster.image_url) {
-                      (e.target as HTMLImageElement).src = poster.image_url;
+                    if (imagePoster.image_url) {
+                      (e.target as HTMLImageElement).src = imagePoster.image_url;
                     }
                   }}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -100,9 +175,13 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
                 <span className="absolute top-2 right-2 bg-ink/80 text-cream-50 font-mono text-[10px] px-1.5 py-0.5 rounded backdrop-blur-sm">
                   {poster.plate_number}
                 </span>
+                {isBausteineSeries(poster.series_id) && preferVisualChart && (
+                  <span className="absolute top-2 left-2 bg-german-amber text-ink font-mono text-[9px] px-1.5 py-0.5 rounded font-bold">
+                    VISUAL
+                  </span>
+                )}
               </div>
 
-              {/* Caption */}
               <div className="p-3 space-y-1">
                 <span className="text-[10px] font-mono text-ink/50 uppercase block truncate">
                   {poster.series_english_name
@@ -122,8 +201,7 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
         })}
       </div>
 
-      {/* Poster Deep Dive Lightbox Modal */}
-      {activePoster && (
+      {activePoster && lightboxImagePoster && (
         <div
           onClick={() => setActivePoster(null)}
           className="fixed inset-0 z-50 bg-ink/70 backdrop-blur-sm p-4 sm:p-6 flex items-center justify-center overflow-y-auto"
@@ -132,24 +210,45 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
             onClick={(e) => e.stopPropagation()}
             className="bg-cream-50 border-2 border-ink rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden flex flex-col md:flex-row shadow-2xl animate-in fade-in zoom-in-95 duration-200"
           >
-            {/* Left: Poster Image Preview */}
-            <div className="md:w-1/2 bg-cream-200 p-4 flex items-center justify-center border-b md:border-b-0 md:border-r border-ink/20 overflow-auto">
-              <img
-                src={getPosterImageUrl(activePoster)}
-                alt={posterLabel(activePoster)}
-                onError={(e) => {
-                  if (activePoster.image_url) {
-                    (e.target as HTMLImageElement).src = activePoster.image_url;
-                  }
-                }}
-                className="max-h-[75vh] w-auto object-contain rounded shadow-lg border border-ink/20"
-              />
+            <div className="md:w-1/2 bg-cream-200 p-4 flex flex-col border-b md:border-b-0 md:border-r border-ink/20 overflow-auto">
+              {isBausteineSeries(activePoster.series_id) && (
+                <div className="flex border-2 border-ink/20 overflow-hidden mb-3 self-start">
+                  <button
+                    type="button"
+                    onClick={() => handleBausteineToggle(false)}
+                    className={`px-2 py-1 text-[10px] font-mono font-bold ${
+                      !preferVisualChart ? 'bg-ink text-cream-50' : 'bg-cream-100 text-ink/70'
+                    }`}
+                  >
+                    Text
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleBausteineToggle(true)}
+                    className={`px-2 py-1 text-[10px] font-mono font-bold ${
+                      preferVisualChart ? 'bg-ink text-cream-50' : 'bg-cream-100 text-ink/70'
+                    }`}
+                  >
+                    Visual
+                  </button>
+                </div>
+              )}
+              <div className="flex-1 flex items-center justify-center">
+                <img
+                  src={getPosterImageUrl(lightboxImagePoster)}
+                  alt={posterLabel(lightboxImagePoster)}
+                  onError={(e) => {
+                    if (lightboxImagePoster.image_url) {
+                      (e.target as HTMLImageElement).src = lightboxImagePoster.image_url;
+                    }
+                  }}
+                  className="max-h-[70vh] w-auto object-contain rounded shadow-lg border border-ink/20"
+                />
+              </div>
             </div>
 
-            {/* Right: Knowledge breakdown & extracted cards */}
             <div className="md:w-1/2 p-6 flex flex-col justify-between overflow-y-auto max-h-[85vh] space-y-6">
               <div className="space-y-4">
-                {/* Modal Header */}
                 <div className="flex items-start justify-between gap-2 border-b border-ink/10 pb-3">
                   <div>
                     <span className="text-xs font-mono font-bold tracking-wider text-german-amber uppercase">
@@ -175,7 +274,6 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
                   </button>
                 </div>
 
-                {/* HOW IT WORKS Explanation Box */}
                 {activePoster.how_it_works && (
                   <div className="bg-cream-100 border border-ink/15 rounded-xl p-4 space-y-1 text-xs text-ink/80 leading-relaxed">
                     <span className="font-mono font-bold uppercase text-[10px] block text-german-amber">
@@ -185,10 +283,11 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
                   </div>
                 )}
 
-                {/* Extracted Cards List */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs font-mono text-ink/70">
-                    <span className="font-bold uppercase">EXTRACTED CARDS ({activePoster.cards.length})</span>
+                    <span className="font-bold uppercase">
+                      EXTRACTED CARDS ({activePoster.cards.length})
+                    </span>
                   </div>
 
                   <div className="space-y-1.5 max-h-56 overflow-y-auto pr-1">
@@ -227,8 +326,8 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
                               c.gender === 'masculine'
                                 ? 'bg-german-der'
                                 : c.gender === 'feminine'
-                                ? 'bg-german-die'
-                                : 'bg-german-das'
+                                  ? 'bg-german-die'
+                                  : 'bg-german-das'
                             }`}
                           >
                             {c.gender.slice(0, 3).toUpperCase()}
@@ -240,7 +339,6 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
                 </div>
               </div>
 
-              {/* Action Button */}
               <div className="pt-3 border-t border-ink/10">
                 <button
                   onClick={() => {
@@ -251,7 +349,8 @@ export const PosterGallery: React.FC<PosterGalleryProps> = ({
                   }}
                   className="w-full py-3 bg-ink text-cream-50 rounded-xl font-mono text-xs font-bold tracking-wider hover:bg-ink/90 transition-all flex items-center justify-center gap-2 shadow-tactile hover:shadow-none"
                 >
-                  <BookOpen className="w-4 h-4" /> STUDY THIS POSTER'S DECK ({activePoster.cards.length} CARDS)
+                  <BookOpen className="w-4 h-4" /> STUDY THIS POSTER'S DECK ({activePoster.cards.length}{' '}
+                  CARDS)
                 </button>
               </div>
             </div>
