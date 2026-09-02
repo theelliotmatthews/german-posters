@@ -8,6 +8,7 @@ interface TopicPickerProps {
   posterId: string;
   onSeriesChange: (seriesId: string) => void;
   onPosterChange: (posterId: string) => void;
+  compact?: boolean;
 }
 
 export const TopicPicker: React.FC<TopicPickerProps> = ({
@@ -16,6 +17,7 @@ export const TopicPicker: React.FC<TopicPickerProps> = ({
   posterId,
   onSeriesChange,
   onPosterChange,
+  compact = false,
 }) => {
   const posters = useMemo(() => {
     if (seriesId === 'all') return database.posters;
@@ -56,15 +58,21 @@ export const TopicPicker: React.FC<TopicPickerProps> = ({
 
   return (
     <div className="border-b border-ink/15 bg-cream-50">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-1.5 sm:py-3 space-y-0 sm:space-y-2.5">
-        <div className="hidden sm:flex items-baseline justify-between gap-3">
-          <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-ink/70 uppercase">
-            Thema · Choose a topic
-          </span>
-          <span className="text-[10px] font-mono text-ink/50">
-            {database.stats.total_series} series · {database.stats.total_posters} posters
-          </span>
-        </div>
+      <div
+        className={`max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-0 ${
+          compact ? 'py-1 sm:py-1.5 sm:space-y-1' : 'py-1.5 sm:py-3 space-y-0 sm:space-y-2.5'
+        }`}
+      >
+        {!compact && (
+          <div className="hidden sm:flex items-baseline justify-between gap-3">
+            <span className="text-[10px] font-mono font-bold tracking-[0.2em] text-ink/70 uppercase">
+              Thema · Choose a topic
+            </span>
+            <span className="text-[10px] font-mono text-ink/50">
+              {database.stats.total_series} series · {database.stats.total_posters} posters
+            </span>
+          </div>
+        )}
 
         <div className="sm:hidden grid grid-cols-2 gap-1.5">
           <select
@@ -83,45 +91,85 @@ export const TopicPicker: React.FC<TopicPickerProps> = ({
           {posterSelect}
         </div>
 
-        <div className="hidden sm:flex flex-wrap gap-1.5">
-          <button
-            type="button"
-            onClick={() => handleSeriesChange('all')}
-            className={`px-2.5 py-1 text-[11px] font-mono font-bold tracking-wide border-2 transition-colors ${
-              seriesId === 'all'
-                ? 'bg-ink text-cream-50 border-ink'
-                : 'bg-cream-100 text-ink border-ink/20 hover:border-ink/50'
-            }`}
-          >
-            All topics (every series)
-          </button>
-          {database.series.map((s) => {
-            const active = seriesId === s.id;
-            return (
+        {compact ? (
+          <div className="hidden sm:flex items-center gap-2 min-w-0">
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar flex-nowrap flex-1 min-w-0 pb-0.5">
               <button
-                key={s.id}
                 type="button"
-                onClick={() => handleSeriesChange(s.id)}
-                className={`px-2.5 py-1 text-[11px] font-mono font-bold tracking-wide border-2 border-l-4 transition-colors ${
-                  active
-                    ? 'bg-cream-50 text-ink border-ink'
-                    : 'bg-cream-100 text-ink/80 border-ink/20 hover:border-ink/50'
+                onClick={() => handleSeriesChange('all')}
+                className={`shrink-0 px-2 py-0.5 text-[10px] font-mono font-bold tracking-wide border-2 transition-colors ${
+                  seriesId === 'all'
+                    ? 'bg-ink text-cream-50 border-ink'
+                    : 'bg-cream-100 text-ink border-ink/20 hover:border-ink/50'
                 }`}
-                style={{ borderLeftColor: s.color }}
-                title={s.description}
               >
-                {seriesLabel(s)}
+                All topics
               </button>
-            );
-          })}
-        </div>
+              {database.series.map((s) => {
+                const active = seriesId === s.id;
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => handleSeriesChange(s.id)}
+                    className={`shrink-0 px-2 py-0.5 text-[10px] font-mono font-bold tracking-wide border-2 border-l-4 transition-colors ${
+                      active
+                        ? 'bg-cream-50 text-ink border-ink'
+                        : 'bg-cream-100 text-ink/80 border-ink/20 hover:border-ink/50'
+                    }`}
+                    style={{ borderLeftColor: s.color }}
+                    title={s.description}
+                  >
+                    {seriesLabel(s)}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="w-44 lg:w-52 shrink-0">{posterSelect}</div>
+          </div>
+        ) : (
+          <>
+            <div className="hidden sm:flex flex-wrap gap-1.5">
+              <button
+                type="button"
+                onClick={() => handleSeriesChange('all')}
+                className={`px-2.5 py-1 text-[11px] font-mono font-bold tracking-wide border-2 transition-colors ${
+                  seriesId === 'all'
+                    ? 'bg-ink text-cream-50 border-ink'
+                    : 'bg-cream-100 text-ink border-ink/20 hover:border-ink/50'
+                }`}
+              >
+                All topics (every series)
+              </button>
+              {database.series.map((s) => {
+                const active = seriesId === s.id;
+                return (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => handleSeriesChange(s.id)}
+                    className={`px-2.5 py-1 text-[11px] font-mono font-bold tracking-wide border-2 border-l-4 transition-colors ${
+                      active
+                        ? 'bg-cream-50 text-ink border-ink'
+                        : 'bg-cream-100 text-ink/80 border-ink/20 hover:border-ink/50'
+                    }`}
+                    style={{ borderLeftColor: s.color }}
+                    title={s.description}
+                  >
+                    {seriesLabel(s)}
+                  </button>
+                );
+              })}
+            </div>
 
-        <div className="hidden sm:flex items-center gap-2">
-          <label className="text-[10px] font-mono font-bold text-ink/60 uppercase tracking-wider shrink-0">
-            Poster
-          </label>
-          {posterSelect}
-        </div>
+            <div className="hidden sm:flex items-center gap-2">
+              <label className="text-[10px] font-mono font-bold text-ink/60 uppercase tracking-wider shrink-0">
+                Poster
+              </label>
+              {posterSelect}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

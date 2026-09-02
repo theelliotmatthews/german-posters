@@ -77,6 +77,14 @@ export interface UserProgress {
     wordScramble: number;
     matchGrid: number;
     listenSpeak: number;
+    weltQuest: number;
+  };
+  adventure?: {
+    zoo?: {
+      questStarted: boolean;
+      animalsLearned: string[];
+      questComplete: boolean;
+    };
   };
   streak: number;
   lastActiveDate: string;

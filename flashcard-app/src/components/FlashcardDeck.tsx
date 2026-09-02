@@ -18,6 +18,7 @@ import { updateCardMastery, toggleStarCard } from '../utils/storage';
 import { PictogramIcon } from './PictogramIcon';
 import { filterCardsByTopic } from '../utils/topic';
 import { cardTopicLabel } from '../utils/labels';
+import { getClothingMnemonicImage } from '../data/clothingMnemonicImages';
 
 interface FlashcardDeckProps {
   database: Database;
@@ -26,6 +27,7 @@ interface FlashcardDeckProps {
   onViewPoster?: (posterId: string, seriesId: string) => void;
   seriesId: string;
   posterId: string;
+  viewportFit?: boolean;
 }
 
 export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({
@@ -35,6 +37,7 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({
   onViewPoster,
   seriesId,
   posterId,
+  viewportFit = false,
 }) => {
   const [selectedType, setSelectedType] = useState<string>('all');
   const [selectedMastery, setSelectedMastery] = useState<string>('all');
@@ -214,22 +217,49 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({
   const genderBadge = currentCard ? getGenderBadge(currentCard.gender) : null;
   const isStarred = currentCard ? progress.starredCardIds.includes(currentCard.id) : false;
   const cardMastery = currentCard ? progress.cardStatus[currentCard.id] || 'new' : 'new';
+  const mnemonicImage = getClothingMnemonicImage(currentCard?.id);
 
   return (
-    <div className="max-w-4xl mx-auto px-3 sm:px-6 py-2 sm:py-6 space-y-3 sm:space-y-6">
+    <div
+      className={`max-w-4xl mx-auto px-3 sm:px-6 w-full ${
+        viewportFit
+          ? 'h-full min-h-0 flex flex-col gap-2 sm:gap-3 py-0'
+          : 'py-2 sm:py-6 space-y-3 sm:space-y-6'
+      }`}
+    >
       {/* Filter Toolbar */}
-      <div className="sm:bg-cream-50 sm:border sm:border-ink/20 sm:rounded-lg sm:p-4 sm:shadow-sm sm:space-y-3">
-        <div className="hidden sm:flex items-center justify-between border-b border-ink/10 pb-2.5">
-          <div className="flex items-center gap-2 text-xs font-mono font-bold tracking-wider uppercase text-ink/80">
-            <Filter className="w-3.5 h-3.5 text-german-amber" />
-            Deck Filters & Focus
-          </div>
-          <div className="text-xs font-mono text-ink/70">
-            {deck.length} {deck.length === 1 ? 'card' : 'cards'} available
-          </div>
+      <div
+        className={`shrink-0 sm:bg-cream-50 sm:border sm:border-ink/20 sm:rounded-lg sm:shadow-sm ${
+          viewportFit ? 'sm:p-2.5 sm:space-y-2' : 'sm:p-4 sm:space-y-3'
+        }`}
+      >
+        <div
+          className={`hidden sm:flex items-center justify-between border-b border-ink/10 ${
+            viewportFit ? 'pb-1.5' : 'pb-2'
+          } ${viewportFit ? '' : ''}`}
+        >
+          {!viewportFit && (
+            <>
+              <div className="flex items-center gap-2 text-xs font-mono font-bold tracking-wider uppercase text-ink/80">
+                <Filter className="w-3.5 h-3.5 text-german-amber" />
+                Deck Filters & Focus
+              </div>
+              <div className="text-xs font-mono text-ink/70">
+                {deck.length} {deck.length === 1 ? 'card' : 'cards'} available
+              </div>
+            </>
+          )}
+          {viewportFit && (
+            <div className="flex items-center justify-between w-full text-[11px] font-mono text-ink/70">
+              <span className="font-bold text-ink/80 uppercase tracking-wider">Filters</span>
+              <span>
+                {deck.length} {deck.length === 1 ? 'card' : 'cards'}
+              </span>
+            </div>
+          )}
         </div>
 
-        <div className="grid grid-cols-2 gap-1.5 sm:gap-3 text-xs">
+        <div className={`grid grid-cols-2 text-xs ${viewportFit ? 'gap-2' : 'gap-1.5 sm:gap-3'}`}>
           <div>
             <label className="hidden sm:block font-mono text-ink/60 mb-1">CONTENT TYPE</label>
             <select
@@ -284,9 +314,13 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({
           </button>
         </div>
       ) : (
-        <div className="space-y-2 sm:space-y-4">
+        <div
+          className={`flex flex-col min-h-0 ${
+            viewportFit ? 'flex-1 gap-2 sm:gap-2.5' : 'space-y-2 sm:space-y-4'
+          }`}
+        >
           {/* Deck Status Bar */}
-          <div className="flex items-center justify-between text-[11px] sm:text-xs font-mono text-ink/70 px-0.5">
+          <div className="shrink-0 flex items-center justify-between text-[11px] sm:text-xs font-mono text-ink/70 px-0.5">
             <div className="flex items-center gap-2">
               <span className="font-bold text-ink">
                 CARD {currentIndex + 1} OF {deck.length}
@@ -319,7 +353,7 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({
           </div>
 
           {/* Progress Bar */}
-          <div className="w-full bg-cream-200 h-1.5 rounded-full overflow-hidden border border-ink/10">
+          <div className="shrink-0 w-full bg-cream-200 h-1.5 rounded-full overflow-hidden border border-ink/10">
             <div
               className="bg-german-amber h-full transition-all duration-300"
               style={{ width: `${((currentIndex + 1) / deck.length) * 100}%` }}
@@ -329,12 +363,15 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({
           {/* 3D Tactile Card */}
           <div
             onClick={handleFlip}
-            className="perspective-1000 cursor-pointer select-none group min-h-[240px] sm:min-h-[420px]"
+            className={`perspective-1000 cursor-pointer select-none group min-h-0 ${
+              viewportFit ? 'flex-1 flex flex-col' : 'min-h-[240px] sm:min-h-[420px]'
+            }`}
           >
             <div
               className={`
-                relative w-full h-full min-h-[240px] sm:min-h-[420px] rounded-2xl border-2 border-ink bg-cream-50
+                relative w-full rounded-2xl border-2 border-ink bg-cream-50
                 shadow-poster hover:shadow-poster-lg transition-all duration-500 transform-style-3d
+                ${viewportFit ? 'flex-1 min-h-[180px]' : 'h-full min-h-[240px] sm:min-h-[420px]'}
                 ${isFlipped ? 'rotate-y-180' : ''}
               `}
             >
@@ -379,7 +416,11 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({
                 </div>
 
                 {/* Front Core Content */}
-                <div className="my-auto py-3 sm:py-6 text-center space-y-2 sm:space-y-4">
+                <div
+                  className={`my-auto text-center space-y-2 ${
+                    viewportFit ? 'py-2 sm:py-3 overflow-y-auto min-h-0' : 'py-3 sm:py-6 space-y-2 sm:space-y-4'
+                  }`}
+                >
                   {/* Visual Pictogram Anchor */}
                   <div className="flex justify-center -mb-1">
                     <PictogramIcon
@@ -394,7 +435,15 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({
                   <h2
                     className={`
                       font-bold tracking-tight text-ink font-display
-                      ${currentCard?.german.length && currentCard.german.length > 35 ? 'text-xl sm:text-3xl' : 'text-2xl sm:text-5xl'}
+                      ${
+                        viewportFit
+                          ? currentCard?.german.length && currentCard.german.length > 35
+                            ? 'text-xl sm:text-2xl lg:text-3xl'
+                            : 'text-2xl sm:text-3xl lg:text-4xl'
+                          : currentCard?.german.length && currentCard.german.length > 35
+                            ? 'text-xl sm:text-3xl'
+                            : 'text-2xl sm:text-5xl'
+                      }
                     `}
                   >
                     {currentCard?.german}
@@ -421,7 +470,11 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({
               </div>
 
               {/* BACK OF CARD (ENGLISH & HOW IT WORKS) */}
-              <div className="absolute inset-0 w-full h-full p-4 sm:p-8 flex flex-col justify-between backface-hidden rotate-y-180 corner-registration bg-cream-50">
+              <div
+                className={`absolute inset-0 w-full h-full flex flex-col justify-between backface-hidden rotate-y-180 corner-registration bg-cream-50 ${
+                  viewportFit ? 'p-3 sm:p-4' : 'p-4 sm:p-8'
+                }`}
+              >
                 {/* Back Header */}
                 <div className="flex items-start justify-between gap-2 border-b border-ink/10 pb-2 sm:pb-4">
                   <div className="flex items-center gap-2">
@@ -445,23 +498,59 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({
                 </div>
 
                 {/* Back Content */}
-                <div className="my-auto py-4 space-y-4 text-center">
-                  <div className="flex justify-center -mb-2">
-                    <PictogramIcon
-                      name={currentCard?.pictogram}
-                      german={currentCard?.german}
-                      gender={currentCard?.gender}
-                      type={currentCard?.type}
-                      size={28}
-                    />
-                  </div>
+                <div
+                  className={`my-auto space-y-3 sm:space-y-4 text-center ${
+                    viewportFit ? 'py-2 overflow-y-auto min-h-0' : 'py-4'
+                  }`}
+                >
+                  <div
+                    className={
+                      mnemonicImage
+                        ? 'grid grid-cols-[minmax(0,1fr)_minmax(130px,0.9fr)] sm:grid-cols-[minmax(0,0.9fr)_minmax(180px,1.1fr)] items-center gap-3 sm:gap-6 text-left'
+                        : ''
+                    }
+                  >
+                    <div className={mnemonicImage ? 'min-w-0 text-center' : ''}>
+                      {!mnemonicImage && (
+                        <div className="flex justify-center -mb-2">
+                          <PictogramIcon
+                            name={currentCard?.pictogram}
+                            german={currentCard?.german}
+                            gender={currentCard?.gender}
+                            type={currentCard?.type}
+                            size={28}
+                          />
+                        </div>
+                      )}
 
-                  <h3 className="text-2xl sm:text-4xl font-bold text-ink font-display tracking-tight">
-                    {currentCard?.english}
-                  </h3>
+                      <h3
+                        className={`font-bold text-ink font-display tracking-tight ${
+                          viewportFit ? 'text-xl sm:text-2xl lg:text-3xl' : 'text-2xl sm:text-4xl'
+                        }`}
+                      >
+                        {currentCard?.english}
+                      </h3>
 
-                  <div className="inline-block px-4 py-1.5 rounded-lg bg-cream-100 border border-ink/15 text-ink/80 text-sm font-medium">
-                    {currentCard?.german}
+                      <div className="inline-block mt-3 sm:mt-4 px-3 sm:px-4 py-1.5 rounded-lg bg-cream-100 border border-ink/15 text-ink/80 text-xs sm:text-sm font-medium">
+                        {currentCard?.german}
+                      </div>
+                    </div>
+
+                    {mnemonicImage && currentCard && (
+                      <figure className="min-w-0">
+                        <img
+                          src={mnemonicImage}
+                          alt={`${currentCard.german} mnemonic: ${currentCard.english}`}
+                          className={`mx-auto aspect-square object-cover rounded-xl border border-ink/15 shadow-sm ${
+                            viewportFit
+                              ? 'w-20 sm:w-24 lg:w-32'
+                              : 'w-full max-h-52.5 sm:max-h-62.5'
+                          }`}
+                          loading="eager"
+                          decoding="async"
+                        />
+                      </figure>
+                    )}
                   </div>
 
                   {/* HOW IT WORKS Collapsible Rule Box */}
@@ -501,7 +590,11 @@ export const FlashcardDeck: React.FC<FlashcardDeckProps> = ({
           </div>
 
           {/* Action Control Bar (Navigation & Self Rating) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 pt-0 sm:pt-2">
+          <div
+            className={`shrink-0 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 ${
+              viewportFit ? 'pt-0' : 'pt-0 sm:pt-2'
+            }`}
+          >
             {/* Left: Previous / Flip / Next */}
             <div className="flex items-center gap-2">
               <button

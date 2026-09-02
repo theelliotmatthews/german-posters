@@ -293,7 +293,7 @@ def extract_cards_from_prompt(
             continue
 
         # Check for (pictogram) "German — English"
-        pic_noun_match = re.match(r'^\(([^)]+)\)\s*["\']?([^—\-–]+)\s*[—\-–]\s*([^"\']+)["\']?', line_s)
+        pic_noun_match = re.match(r'^\(([^)]+)\)\s*["\']?(.+?)\s+(?:—|–|-)\s+([^"\']+)["\']?', line_s)
         if pic_noun_match:
             pic = pic_noun_match.group(1).strip()
             ger = pic_noun_match.group(2).strip()

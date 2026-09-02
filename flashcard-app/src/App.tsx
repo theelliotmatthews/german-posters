@@ -7,6 +7,7 @@ import { SpeedQuizGame } from './components/SpeedQuizGame';
 import { WordScrambleGame } from './components/WordScrambleGame';
 import { MatchGridGame } from './components/MatchGridGame';
 import { ListenSpeakGame } from './components/ListenSpeakGame';
+import { WeltAdventureGame } from './components/WeltAdventureGame';
 import { PosterGallery } from './components/PosterGallery';
 import { CurriculumMap } from './components/CurriculumMap';
 import { CardSearchModal } from './components/CardSearchModal';
@@ -57,10 +58,16 @@ export const App: React.FC = () => {
 
   const topicKey = `${topicSeriesId}::${topicPosterId}`;
   const seriesNames = database.series.map((s) => seriesLabel(s)).join(', ');
+  const isViewportFitTab = activeTab !== 'posters' && activeTab !== 'map';
+  const hideTopicPicker = activeTab === 'posters' || activeTab === 'map' || activeTab === 'welt';
 
   return (
-    <div className="min-h-screen bg-cream-100 text-ink flex flex-col font-sans">
-      <div className="sticky top-0 z-40">
+    <div
+      className={`bg-cream-100 text-ink flex flex-col font-sans ${
+        isViewportFitTab ? 'h-dvh overflow-hidden' : 'min-h-screen'
+      }`}
+    >
+      <div className="shrink-0 z-40">
         <Header
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -71,18 +78,23 @@ export const App: React.FC = () => {
           masteredCount={masteredCount}
           posterCount={database.stats.total_posters}
         />
-        {activeTab !== 'posters' && activeTab !== 'map' && (
+        {!hideTopicPicker && (
           <TopicPicker
             database={database}
             seriesId={topicSeriesId}
             posterId={topicPosterId}
             onSeriesChange={setTopicSeriesId}
             onPosterChange={setTopicPosterId}
+            compact={isViewportFitTab}
           />
         )}
       </div>
 
-      <main className="flex-1 py-2 sm:py-8">
+      <main
+        className={`flex-1 ${
+          isViewportFitTab ? 'min-h-0 overflow-hidden py-1 sm:py-2' : 'py-2 sm:py-8'
+        }`}
+      >
         {activeTab === 'study' && (
           <FlashcardDeck
             database={database}
@@ -95,6 +107,7 @@ export const App: React.FC = () => {
             }}
             seriesId={topicSeriesId}
             posterId={topicPosterId}
+            viewportFit
           />
         )}
 
@@ -153,6 +166,10 @@ export const App: React.FC = () => {
           />
         )}
 
+        {activeTab === 'welt' && (
+          <WeltAdventureGame progress={progress} setProgress={setProgress} />
+        )}
+
         {activeTab === 'posters' && (
           <PosterGallery
             database={database}
@@ -181,23 +198,25 @@ export const App: React.FC = () => {
         onSelectCard={handleSelectCardFromSearch}
       />
 
-      <footer className="hidden sm:block border-t border-ink/15 bg-cream-50 py-6 mt-12 text-xs font-mono text-ink/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-german-das"></span>
-            <span>SCHULWANDKARTE v1.0 · A1/A2 GERMAN FLASHCARDS & GAMES</span>
+      {!isViewportFitTab && (
+        <footer className="hidden sm:block border-t border-ink/15 bg-cream-50 py-6 mt-12 text-xs font-mono text-ink/60 shrink-0">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-german-das"></span>
+              <span>SCHULWANDKARTE v1.0 · A1/A2 GERMAN FLASHCARDS & GAMES</span>
+            </div>
+            <div className="flex items-center gap-4 flex-wrap justify-center">
+              <span>{database.stats.total_posters} Posters</span>
+              <span>·</span>
+              <span>{database.stats.total_cards} Cards</span>
+              <span>·</span>
+              <span>
+                {database.stats.total_series} Series ({seriesNames})
+              </span>
+            </div>
           </div>
-          <div className="flex items-center gap-4 flex-wrap justify-center">
-            <span>{database.stats.total_posters} Posters</span>
-            <span>·</span>
-            <span>{database.stats.total_cards} Cards</span>
-            <span>·</span>
-            <span>
-              {database.stats.total_series} Series ({seriesNames})
-            </span>
-          </div>
-        </div>
-      </footer>
+        </footer>
+      )}
     </div>
   );
 };

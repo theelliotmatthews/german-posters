@@ -11,6 +11,7 @@ const defaultProgress: UserProgress = {
     wordScramble: 0,
     matchGrid: 0,
     listenSpeak: 0,
+    weltQuest: 0,
   },
   streak: 1,
   lastActiveDate: new Date().toISOString().split('T')[0],
